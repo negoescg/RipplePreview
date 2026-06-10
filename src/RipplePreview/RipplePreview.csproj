@@ -20,7 +20,7 @@
     <PackageProjectUrl>https://github.com/negoescg/RipplePreview</PackageProjectUrl>
     <RepositoryUrl>https://github.com/negoescg/RipplePreview</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>0.1.8</Version>
+    <Version>1.0.0</Version>
   </PropertyGroup>
 
   <PropertyGroup>
