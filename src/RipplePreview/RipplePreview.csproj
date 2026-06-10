@@ -16,7 +16,11 @@
     <PackageTags>umbraco umbraco-marketplace block-grid block-list preview backoffice</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Version>0.1.7</Version>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/negoescg/RipplePreview</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/negoescg/RipplePreview</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Version>0.1.8</Version>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -37,6 +41,7 @@
     <None Include="README.md" Pack="true" PackagePath="\" />
     <None Include="NOTICE.md" Pack="true" PackagePath="\" />
     <None Include="LICENSE.md" Pack="true" PackagePath="\" />
+    <None Include="icon.png" Pack="true" PackagePath="\" />
     <!-- appsettings IntelliSense for consumers: schema at package root, registered via buildTransitive -->
     <Content Remove="appsettings-schema.ripplepreview.json" />
     <None Include="appsettings-schema.ripplepreview.json" Pack="true" PackagePath="\" />
