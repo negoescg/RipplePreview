@@ -90,6 +90,82 @@ In views, `ViewData["ripplePreview"]` is `true` during preview rendering, and
 ModelsBuilder is recommended but **not required** — without generated models, blocks render as
 `BlockGridItem<IPublishedElement>`.
 
+## Matching your site's markup
+
+Most sites need nothing beyond `Enabled` and `Stylesheets`. Two situations need a little more:
+
+### Your site renders grids with its own markup
+
+If your templates lay out block grids through custom markup — your own container classes and
+column CSS instead of Umbraco's defaults — previews need that chrome too, or blocks will render
+unwrapped. Provide it once with a wrapper view:
+
+```json
+"BlockGrid": { "WrapperView": "/Views/Partials/ripplePreview/gridWrapper.cshtml" }
+```
+
+The wrapper receives the block as its model plus everything needed to reproduce your page chrome:
+
+```cshtml
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockGridItem>
+@using Umbraco.Cms.Core.Models.PublishedContent
+@{
+    var inner = ViewData["rippleInnerHtml"] as Microsoft.AspNetCore.Html.HtmlString;
+    var fraction = ViewData["rippleWidthFraction"] is double f ? f : 1d;          // block's share of the page width
+    var owner = ViewData["rippleOwner"] as IPublishedContent;                     // the page being edited
+    var nested = (ViewData["rippleAncestors"] as List<IPublishedElement>)?.Count > 0;
+    var width = fraction >= 0.999 ? "100vw"
+        : FormattableString.Invariant($"calc(100vw * {fraction:0.####})");
+
+    // Example: paint a per-page background, but only for top-level blocks —
+    // nested blocks sit on their parent's background instead.
+    var pageBackground = nested ? null : owner?.Value<string>("pageBackgroundColor");
+}
+@if (!string.IsNullOrEmpty(pageBackground))
+{
+    <style>html.ripple-preview body { background: @pageBackground; }</style>
+}
+<style>
+    /* Repeat the grid classes your page template normally provides, so blocks —
+       and their children, which render inside this document too — lay out identically. */
+    .my-grid-container { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); }
+    .my-col-6 { grid-column: span 6; }
+    /* ... the rest of your column/row classes ... */
+</style>
+<div class="my-grid-container" style="width:@width">
+    @inner
+</div>
+```
+
+Rule of thumb: anything your page template contributes to how blocks look — grid classes,
+container widths, page backgrounds — belongs in the wrapper, because a block preview renders
+without the page template around it.
+
+### Blocks that depend on page-level scripts
+
+If a block's visual is produced by a script living in your page template (for example, a script
+that counts rows and generates numbered buttons), that script isn't part of the block's own
+markup, so the preview can't run it. Recreate just the visual part in a small script that loads
+**only inside previews**:
+
+```json
+"BlockGrid": { "Scripts": [ "/js/my-preview-helpers.js" ] }
+```
+
+```js
+// my-preview-helpers.js — loaded only inside Ripple previews
+(function () {
+    function init() {
+        // recreate the page-level behavior your block relies on, e.g. generate
+        // the elements a template script would normally inject
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
+})();
+```
+
+Your live site is untouched — these scripts exist only in the preview documents.
+
 ### How blocks with children render
 
 | Mode | When | Behaviour |
