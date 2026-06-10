@@ -1,0 +1,59 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <StaticWebAssetBasePath>/</StaticWebAssetBasePath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>RipplePreview</PackageId>
+    <Product>RipplePreview</Product>
+    <Title>Ripple Preview</Title>
+    <Authors>Dan Negoescu</Authors>
+    <Description>Pixel-perfect, script-enabled live previews for Umbraco block editors. Renders your real frontend views in a scaled, design-width iframe so vw units, fonts and scripts behave exactly like the frontend. Hover to zoom, native nested-area editing, zero view changes required.</Description>
+    <PackageTags>umbraco umbraco-marketplace block-grid block-list preview backoffice</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Version>0.1.7</Version>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Keep the client toolchain out of the MSBuild item graph entirely -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);Client\node_modules\**</DefaultItemExcludes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- 17.3.0 floor: the Single Block editor types ship from 17.3 -->
+    <PackageReference Include="Umbraco.Cms.Web.Website" Version="[17.3.0, 18.0.0)" />
+    <PackageReference Include="Umbraco.Cms.Api.Management" Version="[17.3.0, 18.0.0)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- TypeScript sources are built by Vite into wwwroot/App_Plugins/RipplePreview; ship the output, not the sources -->
+    <Content Remove="Client\**" />
+    <None Remove="Client\**" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="NOTICE.md" Pack="true" PackagePath="\" />
+    <None Include="LICENSE.md" Pack="true" PackagePath="\" />
+    <!-- appsettings IntelliSense for consumers: schema at package root, registered via buildTransitive -->
+    <Content Remove="appsettings-schema.ripplepreview.json" />
+    <None Include="appsettings-schema.ripplepreview.json" Pack="true" PackagePath="\" />
+    <None Include="buildTransitive\RipplePreview.targets" Pack="true" PackagePath="buildTransitive\" />
+  </ItemGroup>
+
+  <!-- Build the backoffice client before packing (and on first build when output is missing),
+       so the nupkg always carries fresh App_Plugins assets. Skip with -p:RippleSkipClientBuild=true. -->
+  <Target Name="RippleClientInstall" Condition="'$(RippleSkipClientBuild)' != 'true' AND !Exists('$(MSBuildProjectDirectory)\Client\node_modules')">
+    <Exec Command="npm install --no-fund --no-audit" WorkingDirectory="$(MSBuildProjectDirectory)\Client" />
+  </Target>
+
+  <Target Name="RippleClientBuild"
+          BeforeTargets="BeforeBuild"
+          DependsOnTargets="RippleClientInstall"
+          Condition="'$(RippleSkipClientBuild)' != 'true' AND ('$(Configuration)' == 'Release' OR !Exists('$(MSBuildProjectDirectory)\wwwroot\App_Plugins\RipplePreview\ripple-preview.js'))">
+    <Exec Command="npm run build" WorkingDirectory="$(MSBuildProjectDirectory)\Client" />
+  </Target>
+
+</Project>
