@@ -1,14 +1,14 @@
 {
   "id": "RipplePreview",
   "name": "Ripple Preview",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "allowTelemetry": false,
   "extensions": [
     {
       "type": "backofficeEntryPoint",
       "alias": "RipplePreview.EntryPoint",
       "name": "Ripple Preview Entry Point",
-      "js": "/App_Plugins/RipplePreview/ripple-preview-1.0.0.js"
+      "js": "/App_Plugins/RipplePreview/ripple-preview-1.0.1.js"
     }
   ]
 }
