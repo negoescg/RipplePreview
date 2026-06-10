@@ -12,7 +12,7 @@
     <Product>RipplePreview</Product>
     <Title>Ripple Preview</Title>
     <Authors>Dan Negoescu</Authors>
-    <Description>Pixel-perfect, script-enabled live previews for Umbraco block editors. Renders your real frontend views in a scaled, design-width iframe so vw units, fonts and scripts behave exactly like the frontend. Hover to zoom, native nested-area editing, zero view changes required.</Description>
+    <Description>See your actual pages while you edit them. Ripple Preview renders blocks in the Umbraco backoffice through your site's own views, styles and scripts — sections render whole with their children, scripts run, and everything stays editable: click any block in the preview to open it.</Description>
     <PackageTags>umbraco umbraco-marketplace block-grid block-list preview backoffice</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>

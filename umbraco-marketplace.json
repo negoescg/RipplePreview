@@ -1,7 +1,7 @@
 {
   "$schema": "https://marketplace.umbraco.com/umbraco-marketplace-schema.json",
   "Title": "Ripple Preview",
-  "Description": "Pixel-perfect, script-enabled live previews for Umbraco block editors. Renders your real frontend views at a configurable design width, so vw units, fonts, scripts and nested grids look exactly like the published page — with native editing, hover-to-edit children, zoom and structure mode.",
+  "Description": "See your actual pages while you edit them. Blocks render through your site's own views, styles and scripts — sections render whole with their children, carousels and animations run, and everything stays editable: hover to highlight a block inside the preview and click to open it.",
   "Category": "Editor Tools",
   "LicenseTypes": ["Free"],
   "DocumentationUrl": "https://github.com/negoescg/RipplePreview#readme",
